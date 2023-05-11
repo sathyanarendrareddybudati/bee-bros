@@ -6,7 +6,7 @@ class ProductsIN(BaseModel):
     name : str
     slug : str
     description : str
-    image : UploadFile
+    image : str
     price : int
     in_stock : bool
     is_active : bool
@@ -15,3 +15,12 @@ class CategoryIN(BaseModel):
     id : int
     name : str
     slug : str
+
+class ProductCart(BaseModel):
+    product_id : int
+    quality : int
+
+class CartIn(BaseModel):
+    id : int 
+    name : str
+    price : int

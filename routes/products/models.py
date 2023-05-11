@@ -30,11 +30,18 @@ class Products(Base):
     created = Column(DateTime, default=func.now())
     updated = Column(DateTime, default=func.now(), onupdate=func.now())
 
-    def __init__(self, name):
-        self.name = name
-        self.slug = slugify(self.name)
+    # def __init__(self, name):
+    #     self.name = name
+    #     self.slug = slugify(self.name)
 
     def __repr__(self):
         return f"Product(id={self.id}, name='{self.name}')"
     
     
+class ProductsCart(Base):
+    __tablename__ = 'products_cart'
+
+    id = Column(Integer, primary_key=True)
+    product_id = Column(Integer, ForeignKey('products.id'))
+    cart_id = relationship('Products', foreign_keys=[product_id])
+    quality = Column(Integer)
