@@ -8,11 +8,14 @@ router = APIRouter(
     tags=['PRODUCTS'],
 )
 
-@router.get('/products/{product_id}')
+@router.get('/products/{product_id}',status_code=status.HTTP_200_OK)
 def products(product_id:int, db:Session=Depends(get_database_session)):
 
     cxt = {}
     products = db.query(Products).filter(Products.id==product_id).first()
+
+    if not products:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
 
     cxt['product_id'] = products.id
     cxt['product_name'] = products.name
@@ -24,7 +27,7 @@ def products(product_id:int, db:Session=Depends(get_database_session)):
 
     return {"results":cxt}
 
-@router.post('/products/create')
+@router.post('/products/create',status_code=status.HTTP_201_CREATED)
 def product_create(product:ProductsIN, db:Session=Depends(get_database_session)):
     products = Products(**product.dict())
     db.add(products)
@@ -32,7 +35,7 @@ def product_create(product:ProductsIN, db:Session=Depends(get_database_session))
     db.refresh(products)
     return products
 
-@router.post('/category/create')
+@router.post('/category/create',status_code=status.HTTP_201_CREATED)
 def category_create(category:CategoryIN, db:Session=Depends(get_database_session)):
     categorys = Category(**category.dict())
     db.add(categorys)
@@ -40,7 +43,7 @@ def category_create(category:CategoryIN, db:Session=Depends(get_database_session
     db.refresh(categorys)
     return categorys
 
-@router.post('/cart/create')
+@router.post('/cart/create',status_code=status.HTTP_201_CREATED)
 def cart_create(cart:CartIn, db:Session=Depends(get_database_session)):
     carts = Category(**cart.dict())
     db.add(carts)
